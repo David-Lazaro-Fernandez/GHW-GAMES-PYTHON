@@ -1,36 +1,16 @@
 # Example file showing a basic pygame "game loop"
 import pygame
-import random
-import math
+from apple import Apple
 
-GRAVITY = 0.1
 # pygame setup
-class Apple: 
-    def __init__(self, screen):
-        self.screen = screen
-        self.x = random.randint(0, 300)
-        self.y = 0
-        self.color = (0, 162, 232)
-        self.radius = 10
-        self.velocity_y = 0
-        self.acceleration_y = GRAVITY  # Gravity
-    def draw(self):
-        pygame.draw.circle(self.screen, self.color, (self.x, self.y), self.radius)
-
-    def fall(self):
-        # Update the apple's position
-        self.velocity_y += self.acceleration_y
-        self.y += self.velocity_y
-
-        if self.y > self.screen.get_height():
-            self.y = 0
-            self.x = random.randint(0, self.screen.get_width())
-            self.velocity_y = 0
-
-
 pygame.init()
 screen = pygame.display.set_mode((300, 500))
 clock = pygame.time.Clock()
+
+# Load images
+background = pygame.image.load("assets/background field.png")
+background = pygame.transform.scale(background, (300, 500))
+
 running = True
 dt=0
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
@@ -39,15 +19,7 @@ apple = Apple(screen)
 apple_list = []
 apple_generation_timer = 0
 
-def check_collision(apple, player_pos, player_radius):
-    # Calculate the distance between the apple and the player
-    distance = math.sqrt((apple.x -  player_pos.x) ** 2 + (apple.y - player_pos.y) ** 2)
 
-    # Check if the distance is less than the sum of the radii (collision)
-    if distance <= apple.radius + player_radius:
-        return True
-    else:
-        return False
 
 while running:
     print(apple_generation_timer)
@@ -61,7 +33,7 @@ while running:
             running = False
 
     # fill the screen with a color to wipe away anything from last frame
-    screen.fill("purple")
+    screen.blit(background, (0, 0))
 
     # RENDER YOUR GAME HERE
     pygame.draw.circle(screen, "red", player_pos, player_radius)
@@ -71,7 +43,7 @@ while running:
         simple_apple.fall()  
         simple_apple.draw()
 
-        if check_collision(simple_apple, player_pos, player_radius):
+        if Apple.check_collision(simple_apple, player_pos, player_radius):
             print("Collision detected!")
             # Handle the collision (e.g., reset the apple, update the score, etc.)
             apple_list.remove(simple_apple)  # Example: remove the apple from the list
