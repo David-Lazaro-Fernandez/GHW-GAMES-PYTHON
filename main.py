@@ -1,50 +1,57 @@
+# Example file showing a basic pygame "game loop"
 import pygame
-import os
+import random
 
-frames_folder = os.path.join(os.path.dirname(__file__), "assets", "frames")
+# pygame setup
 
-class Character:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-        self.speed = 5
-        self.frame_index = 0
-        self.frames = []
+class Apple: 
+    def __init__(self, screen):
+        self.screen = screen
+        self.x = random.randint(0, 300)
+        self.y = 50
+        self.color = (0, 162, 232)
+        self.radius = 10
 
-    def move_left(self):
-        self.x -= self.speed
+    def draw(self):
+        pygame.draw.circle(self.screen, self.color, (self.x, self.y), self.radius)
 
-    def move_right(self):
-        self.x += self.speed
 
-    def draw(self, screen):
-        # Draw the current frame of the character on the screen
-        screen.blit(self.frames[self.frame_index], (self.x, self.y))
-
-# create an instance of the Character class
-character = Character(200, 250)
+pygame.init()
+screen = pygame.display.set_mode((300, 500))
+clock = pygame.time.Clock()
+running = True
+dt=0
+player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+apple = Apple(screen)
 
 while running:
     # poll for events
+    # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_a:
-                character.move_left()
-            elif event.key == pygame.K_d:
-                character.move_right()
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
 
     # RENDER YOUR GAME HERE
-    character.animate()
-    character.draw(screen)
+    pygame.draw.circle(screen, "red", player_pos, 40)
+    apple.draw()
 
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_w]:
+        player_pos.y -= 300 * dt
+    if keys[pygame.K_s]:
+        player_pos.y += 300 * dt
+    if keys[pygame.K_a]:
+        player_pos.x -= 300 * dt
+    if keys[pygame.K_d]:
+        player_pos.x += 300 * dt
     # flip() the display to put your work on screen
     pygame.display.flip()
 
-    clock.tick(60)  # limits FPS to 60
+    # dt is delta time in seconds since last frame, used for framerate-
+    # independent physics.
+    dt = clock.tick(60) / 1000
 
 pygame.quit()
