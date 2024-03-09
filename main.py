@@ -1,7 +1,7 @@
 # Example file showing a basic pygame "game loop"
 import pygame
 import random
-
+import math
 
 GRAVITY = 0.1
 # pygame setup
@@ -9,7 +9,7 @@ class Apple:
     def __init__(self, screen):
         self.screen = screen
         self.x = random.randint(0, 300)
-        self.y = 50
+        self.y = 0
         self.color = (0, 162, 232)
         self.radius = 10
         self.velocity_y = 0
@@ -34,11 +34,20 @@ clock = pygame.time.Clock()
 running = True
 dt=0
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+player_radius = 40  # Define this near where you initialize player_pos
 apple = Apple(screen)
 apple_list = []
 apple_generation_timer = 0
 
+def check_collision(apple, player_pos, player_radius):
+    # Calculate the distance between the apple and the player
+    distance = math.sqrt((apple.x -  player_pos.x) ** 2 + (apple.y - player_pos.y) ** 2)
 
+    # Check if the distance is less than the sum of the radii (collision)
+    if distance <= apple.radius + player_radius:
+        return True
+    else:
+        return False
 
 while running:
     print(apple_generation_timer)
@@ -55,14 +64,19 @@ while running:
     screen.fill("purple")
 
     # RENDER YOUR GAME HERE
-    pygame.draw.circle(screen, "red", player_pos, 40)
-    apple.fall()
-    apple.draw()
+    pygame.draw.circle(screen, "red", player_pos, player_radius)
 
     # Draw all apples
     for simple_apple in apple_list:
         simple_apple.fall()  
         simple_apple.draw()
+
+        if check_collision(simple_apple, player_pos, player_radius):
+            print("Collision detected!")
+            # Handle the collision (e.g., reset the apple, update the score, etc.)
+            apple_list.remove(simple_apple)  # Example: remove the apple from the list
+        
+        
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
