@@ -14,8 +14,8 @@ class Apple:
         self.velocity_y = 0
         self.acceleration_y = self.GRAVITY  # Gravity
     def draw(self):
-        apple_image = pygame.image.load("assets/apple.png")
-        apple_image = pygame.transform.scale(apple_image, (40, 40))
+        apple_image = pygame.image.load("assets/meatballs.png")
+        apple_image = pygame.transform.scale(apple_image, (70, 70))
         self.screen.blit(apple_image, (self.x, self.y))
 
     def fall(self):

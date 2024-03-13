@@ -9,17 +9,17 @@ screen = pygame.display.set_mode((300, 500))
 clock = pygame.time.Clock()
 
 # Load images
-background = pygame.image.load("assets/background field.png")
+background = pygame.image.load("assets/ikea.png")
 background = pygame.transform.scale(background, (300, 500))
 
 #Load character running frames
-character_running_frames = []
-character_running_folder_path = "assets/frames/character_running"
-for filename in os.listdir(character_running_folder_path):
-    if filename.endswith(".gif"):
-        image_path = os.path.join(character_running_folder_path, filename)
-        image = pygame.image.load(image_path)
-        character_running_frames.append(image)
+character_running_frames = [pygame.image.load("assets/blahaj.png")]
+# character_running_folder_path = "assets/frames/character_running"
+# for filename in os.listdir(character_running_folder_path):
+#     if filename.endswith(".gif"):
+#         image_path = os.path.join(character_running_folder_path, filename)
+#         image = pygame.image.load(image_path)
+#         character_running_frames.append(image)
 
 running = True
 dt=0
@@ -29,14 +29,22 @@ apple = Apple(screen)
 apple_list = []
 apple_generation_timer = 0
 frame_value = 0
+facing_left = True  # Initialize this where you initialize your other variables
 
 def redrawGameWindow(frame):
+    # current_frame = frame_value
+    # frame = pygame.transform.scale(character_running_frames[0], (player_radius*2, player_radius*2))
+    # frame_rect = frame.get_rect(center=player_pos)
+    # if not facing_left:
+    #     frame = pygame.transform.flip(frame, True, False)
+    # screen.blit(frame, frame_rect)
+    # pygame.display.update()
     current_frame = frame_value
-    frame = pygame.transform.scale(character_running_frames[current_frame//3], (player_radius*2, player_radius*2))
-    frame_rect = frame.get_rect(center=player_pos)
-    screen.blit(frame, frame_rect)
+    frame = pygame.transform.scale(character_running_frames[0], (player_radius*2, player_radius*2))
+    if not facing_left:
+        frame = pygame.transform.flip(frame, True, False)
+    screen.blit(frame, (player_pos.x, player_pos.y))
     pygame.display.update()
-
 
 while running:
     print(apple_generation_timer)
@@ -46,6 +54,12 @@ while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_a:
+                facing_left = True
+            elif event.key == pygame.K_d:
+                facing_left = False
+                
         if event.type == pygame.QUIT:
             running = False
 
@@ -68,6 +82,7 @@ while running:
     keys = pygame.key.get_pressed()
     if keys[pygame.K_a]:
         player_pos.x -= 300 * dt
+
     if keys[pygame.K_d]:
         player_pos.x += 300 * dt
 
