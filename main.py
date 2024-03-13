@@ -30,11 +30,15 @@ apple_list = []
 apple_generation_timer = 0
 frame_value = 0
 
+pygame.draw.circle(screen, "red", player_pos, player_radius)
 def redrawGameWindow(frame):
-    screen.blit(background, (0,0))  # This will draw our background image at (0,0)
     current_frame = frame_value
-    screen.blit(character_running_frames[current_frame], (player_pos.x / 2, player_pos.y / 2))
-    pygame.display.update() 
+    frame = pygame.transform.scale(character_running_frames[current_frame//3], (player_radius*2, player_radius*2))
+    frame_rect = frame.get_rect(center=player_pos)
+    screen.blit(frame, frame_rect)
+    pygame.display.update()
+
+    
 
 while running:
     print(apple_generation_timer)
@@ -50,7 +54,6 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.blit(background, (0, 0))
     # RENDER YOUR GAME HERE
-    pygame.draw.circle(screen, "red", player_pos, player_radius)
 
     # Draw all apples
     for simple_apple in apple_list:
@@ -73,8 +76,7 @@ while running:
         player_pos.x -= 300 * dt
     if keys[pygame.K_d]:
         player_pos.x += 300 * dt
-    # flip() the display to put your work on screen
-    pygame.display.flip()
+    
 
     # dt is delta time in seconds since last frame, used for framerate-
     # independent physics.
