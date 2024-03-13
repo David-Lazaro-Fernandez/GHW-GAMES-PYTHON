@@ -14,7 +14,9 @@ class Apple:
         self.velocity_y = 0
         self.acceleration_y = self.GRAVITY  # Gravity
     def draw(self):
-        pygame.draw.circle(self.screen, self.color, (self.x, self.y), self.radius)
+        apple_image = pygame.image.load("assets/apple.png")
+        apple_image = pygame.transform.scale(apple_image, (40, 40))
+        self.screen.blit(apple_image, (self.x, self.y))
 
     def fall(self):
         # Update the apple's position

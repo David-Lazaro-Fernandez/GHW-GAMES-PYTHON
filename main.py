@@ -23,14 +23,13 @@ for filename in os.listdir(character_running_folder_path):
 
 running = True
 dt=0
-player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+player_pos = pygame.Vector2(screen.get_width() / 2, 400)
 player_radius = 40  # Define this near where you initialize player_pos
 apple = Apple(screen)
 apple_list = []
 apple_generation_timer = 0
 frame_value = 0
 
-pygame.draw.circle(screen, "red", player_pos, player_radius)
 def redrawGameWindow(frame):
     current_frame = frame_value
     frame = pygame.transform.scale(character_running_frames[current_frame//3], (player_radius*2, player_radius*2))
@@ -38,7 +37,6 @@ def redrawGameWindow(frame):
     screen.blit(frame, frame_rect)
     pygame.display.update()
 
-    
 
 while running:
     print(apple_generation_timer)
@@ -68,15 +66,10 @@ while running:
         
 
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_w]:
-        player_pos.y -= 300 * dt
-    if keys[pygame.K_s]:
-        player_pos.y += 300 * dt
     if keys[pygame.K_a]:
         player_pos.x -= 300 * dt
     if keys[pygame.K_d]:
         player_pos.x += 300 * dt
-    
 
     # dt is delta time in seconds since last frame, used for framerate-
     # independent physics.
